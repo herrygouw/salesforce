@@ -162,11 +162,21 @@ sudo -H pip3 install num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL
 
 sudo pip3 install --upgrade setuptools
 
-sudo pip3 install fpdf img2pdf wheel gdata
+sudo pip3 install fpdf img2pdf wheel gdata 
 sudo pip3 install Babel decorator docutils ebaysdk feedparser gevent greenlet html2text Jinja2 lxml Mako MarkupSafe mock num2words ofxparse passlib Pillow psutil psycopg2 pydot pyparsing PyPDF2 pyserial python-dateutil python-openid pytz pyusb PyYAML qrcode reportlab requests six suds-jurko vatnumber vobject Werkzeug XlsxWriter xlwt xlrd gdata
+
+sudo pip3 install libsass==0.12.3
+sudo apt install python3-libsass
 
 if [ $OE_VERSION == "12.0" ];then
   sudo pip3 install werkzeug==0.14.1
+
+  wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb
+  sudo dpkg -i wkhtmltox_0.12.5–1.bionic_amd64.deb
+  sudo apt install -f
+
+else
+  sudo apt install wkhtmltopdf
 fi
 
 sudo pip3 install python-barcode
@@ -176,7 +186,6 @@ sudo npm install -g less-plugin-clean-css
 
 sudo apt install -f -y
 
-sudo apt install wkhtmltopdf
 sudo pip3 install woocommerce
 sudo pip3 install pyFCM
 
