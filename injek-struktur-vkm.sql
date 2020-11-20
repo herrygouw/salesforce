@@ -20,12 +20,15 @@ CREATE TABLE [dbo].[M01_hosting_log](
 	[TriggerDateTime] [datetime] NOT NULL,
 	[FlagHosting] [nvarchar](1) NOT NULL,
 	[Delay] [int] NULL,
+	[PushDeleteSuccess] [bit] NULL,
+	[PushDeleteDateTime] [datetime] NULL,
  CONSTRAINT [PK_M01_hosting_log] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 
 
 
@@ -42,19 +45,12 @@ BEGIN
 	SET @iRef = (SELECT M0101 FROM inserted i)
 	SET @dRef = (SELECT M0101 FROM deleted d)
 
-	DECLARE @iPushSuccess bit = 1 
-	DECLARE @dPushSuccess bit = 1
-
-	SET @iPushSuccess = (SELECT PushSuccess FROM inserted i)
-	SET @dPushSuccess = (SELECT PushSuccess FROM deleted d)
-
-
 		IF @iRef IS NOT NULL
 			BEGIN
 
 				DECLARE @iRec int = 0
 
-					SET @iRec = (SELECT TOP 1 id FROM [M01_hosting_log] WHERE M0101 = @iRef AND FlagHosting = 'D' AND PushSuccess is NULL AND datediff(ms,TriggerDateTime,GETDATE()) < 10 ORDER BY id DESC)
+					SET @iRec = (SELECT TOP 1 id FROM [M01_hosting_log] WHERE M0101 = @iRef AND FlagHosting = 'D' AND datediff(ms,TriggerDateTime,GETDATE()) < 10 ORDER BY id DESC)
 
 					IF @iRec > 0
 						UPDATE [M01_hosting_log] SET Delay = datediff(ms,TriggerDateTime,GETDATE()), FlagHosting = 'U' WHERE id = @iRec
